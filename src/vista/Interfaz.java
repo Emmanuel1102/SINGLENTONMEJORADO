@@ -22,9 +22,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.table.JTableHeader;
 
 
 /**
@@ -48,14 +51,11 @@ public class Interfaz extends JFrame  implements ActionListener, Runnable{
        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        
        JPanel panelContenido = new JPanel(new FlowLayout(FlowLayout.CENTER));
-       //JPanel panelContenido = new JPanel(new BoxLayout());
        panelContenido.setBackground(Color.WHITE);
       
        //añadiendo el panel al frame
     
        add(panelContenido );
-       
-       //contentPane.setBackground(Color.yellow);
         JLabel title= new JLabel("                                        "
                 + "               AGREGA , VISUALIZA Y MODIFICA DATOS DE ESTUDIANTES:              "
                 + "                                             ");
@@ -67,15 +67,33 @@ public class Interfaz extends JFrame  implements ActionListener, Runnable{
         JLabel sexo= new JLabel("Sexo:");
         JRadioButton rbtn1=new JRadioButton("Mujer",true);
         JRadioButton rbtn2=new JRadioButton("Hombre",false);
+        
         JLabel edad= new JLabel("Edad:");
         JSpinner edadS = new JSpinner();
-		 edadS.setValue(18);
+        SpinnerNumberModel edadM = new   SpinnerNumberModel();
+         edadM.setValue(18);
+                 edadM.setMinimum(18);
+                 edadM.setMaximum(30);
+                 edadS.setModel(edadM);
+                 
+		
+                 
         JLabel semestre= new JLabel("Semestre:");
-        JSpinner SemestreS = new JSpinner();
-		 SemestreS.setValue(1);
+         JSpinner SemestreS = new JSpinner();
+        SpinnerNumberModel SemestreM = new   SpinnerNumberModel();
+		 SemestreM.setValue(1);
+                 SemestreM.setMinimum(1);
+                 SemestreM.setMaximum(13);
+                 SemestreS.setModel(SemestreM);
+                 
         JLabel creditos= new JLabel("Creditos:");
         JSpinner creditosS = new JSpinner();
-		 creditosS.setValue(1);
+        SpinnerNumberModel creditoM = new   SpinnerNumberModel();
+                 creditoM.setValue(1);
+                 creditoM.setMinimum(1);
+                 creditoM.setMaximum(200);
+		 creditosS.setModel(creditoM);
+                 
          JLabel carrera= new JLabel("Carrera:");
          JComboBox CarreraC= new JComboBox();
          CarreraC.addItem("CARRERAS");
@@ -85,6 +103,7 @@ public class Interfaz extends JFrame  implements ActionListener, Runnable{
          CarreraC.addItem("ADMINISTRACION");
          CarreraC.addItem("ELECTRONICA");
          CarreraC.addItem("ELECTRICIDAD");
+         
         JButton registrar = new JButton("Registrar");
         JButton terminar = new JButton("Terminar");
         
@@ -92,11 +111,16 @@ public class Interfaz extends JFrame  implements ActionListener, Runnable{
         ModeloTabla mt=modTabla;
         ManejaDatosEst baseDatos = new ManejaDatosEst();
         mt.setDatos(baseDatos.consultaDatos(consulta),baseDatos);
+        
         JTable tabla1= new JTable();
+
         tabla1.setModel(mt);
+      
  
         
         panelContenido.add(title);
+    
+     
         panelContenido.add(numC);
         panelContenido.add(credits);
         panelContenido.add(name);
@@ -108,12 +132,14 @@ public class Interfaz extends JFrame  implements ActionListener, Runnable{
         panelContenido.add(edadS);
         panelContenido.add(semestre);
         panelContenido.add(SemestreS);
+   
         panelContenido.add(creditos);
         panelContenido.add(creditosS);
         panelContenido.add(carrera);
         panelContenido.add(CarreraC);
         panelContenido.add(registrar);
         panelContenido.add(terminar);
+        panelContenido.add(tabla1.getTableHeader());
         panelContenido.add(tabla1);   
         
         
