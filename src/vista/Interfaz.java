@@ -39,11 +39,18 @@ import javax.swing.table.JTableHeader;
 public class Interfaz extends JFrame  implements ActionListener, Runnable{
 
      //ModeloTabla modTabla;
-     private  ModeloTabla modTabla = new ModeloTabla();
+     private  ModeloTabla mt ;
      private  ManejaDatosEst baseDatos;
      //ModeloTabla mt=modTabla;
     //ManipulaDatos MD;
-
+     private JLabel title,numC, numCL,name,sexo,edad,semestre,creditos,carrera, CarreraC;
+     private JButton registrar,terminar;
+     private JRadioButton rbtn1,rbtn2;
+     private JTextField nametxt;
+     private JSpinner edadS,SemestreS,creditosS;
+     private  SpinnerNumberModel edadM,SemestreM,creditoM ;
+     private JTable tabla1;
+     private ButtonGroup BG;
  
     public Interfaz( ModeloTabla modTabla ) throws ClassNotFoundException {
        
@@ -56,63 +63,61 @@ public class Interfaz extends JFrame  implements ActionListener, Runnable{
        //añadiendo el panel al frame
     
        add(panelContenido );
-        JLabel title= new JLabel("                                        "
+        title= new JLabel("                                        "
                 + "               AGREGA , VISUALIZA Y MODIFICA DATOS DE ESTUDIANTES:              "
                 + "                                             ");
         title.setBounds(50,50,0,0);
-        JLabel numC= new JLabel("Num de Control:");
-        JLabel credits= new JLabel("200");
-        JLabel name= new JLabel("Nombre:");
-        JTextField nametxt = new JTextField(15);
-        JLabel sexo= new JLabel("Sexo:");
-        JRadioButton rbtn1=new JRadioButton("Mujer",true);
-        JRadioButton rbtn2=new JRadioButton("Hombre",false);
+        numC= new JLabel("Num de Control:");
+        numCL= new JLabel("S.N");
+        name= new JLabel("Nombre:");
+        nametxt = new JTextField(15);
+        sexo= new JLabel("Sexo:");
         
-        JLabel edad= new JLabel("Edad:");
-        JSpinner edadS = new JSpinner();
-        SpinnerNumberModel edadM = new   SpinnerNumberModel();
-         edadM.setValue(18);
+         rbtn1=new JRadioButton("Mujer",true);
+         rbtn2=new JRadioButton("Hombre",false);
+         BG = new ButtonGroup();
+         BG.add(rbtn1);
+         BG.add(rbtn2);
+        
+        edad= new JLabel("Edad:");
+        edadS = new JSpinner();
+        edadM = new   SpinnerNumberModel();
+        edadM.setValue(18);
                  edadM.setMinimum(18);
                  edadM.setMaximum(30);
                  edadS.setModel(edadM);
                  
 		
                  
-        JLabel semestre= new JLabel("Semestre:");
-         JSpinner SemestreS = new JSpinner();
-        SpinnerNumberModel SemestreM = new   SpinnerNumberModel();
+         semestre= new JLabel("Semestre:");
+         SemestreS = new JSpinner();
+         SemestreM = new   SpinnerNumberModel();
 		 SemestreM.setValue(1);
                  SemestreM.setMinimum(1);
                  SemestreM.setMaximum(13);
                  SemestreS.setModel(SemestreM);
                  
-        JLabel creditos= new JLabel("Creditos:");
-        JSpinner creditosS = new JSpinner();
-        SpinnerNumberModel creditoM = new   SpinnerNumberModel();
+         creditos= new JLabel("Creditos:");
+         creditosS = new JSpinner();
+         creditoM = new   SpinnerNumberModel();
                  creditoM.setValue(1);
                  creditoM.setMinimum(1);
                  creditoM.setMaximum(200);
 		 creditosS.setModel(creditoM);
                  
-         JLabel carrera= new JLabel("Carrera:");
-         JComboBox CarreraC= new JComboBox();
-         CarreraC.addItem("CARRERAS");
-         CarreraC.addItem("SISTEMAS");
-         CarreraC.addItem("CIVIL");
-         CarreraC.addItem("GESTION");
-         CarreraC.addItem("ADMINISTRACION");
-         CarreraC.addItem("ELECTRONICA");
-         CarreraC.addItem("ELECTRICIDAD");
+         carrera= new JLabel("Carrera ID:");
+         CarreraC= new JLabel("3");
          
-        JButton registrar = new JButton("Registrar");
-        JButton terminar = new JButton("Terminar");
+         
+         registrar = new JButton("Registrar");
+         terminar = new JButton("Terminar");
         
         String consulta = "SELECT *FROM ADMINISTRADOR.ESTUDIANTE";
-        ModeloTabla mt=modTabla;
-        ManejaDatosEst baseDatos = new ManejaDatosEst();
+        mt=modTabla;
+        baseDatos = new ManejaDatosEst();
         mt.setDatos(baseDatos.consultaDatos(consulta),baseDatos);
         
-        JTable tabla1= new JTable();
+        tabla1= new JTable();
 
         tabla1.setModel(mt);
       
@@ -122,12 +127,13 @@ public class Interfaz extends JFrame  implements ActionListener, Runnable{
     
      
         panelContenido.add(numC);
-        panelContenido.add(credits);
+        panelContenido.add( numCL);
         panelContenido.add(name);
         panelContenido.add(nametxt);
         panelContenido.add(sexo);
         panelContenido.add(rbtn1);
         panelContenido.add(rbtn2);
+       
         panelContenido.add(edad);
         panelContenido.add(edadS);
         panelContenido.add(semestre);
@@ -142,7 +148,33 @@ public class Interfaz extends JFrame  implements ActionListener, Runnable{
         panelContenido.add(tabla1.getTableHeader());
         panelContenido.add(tabla1);   
         
+
+             
+   
         
+    registrar.addActionListener(new ActionListener() {
+	public void actionPerformed(ActionEvent arg0) {
+	
+            char sexo = ' ';
+        
+            
+        if (rbtn1.isSelected() == true) {
+            sexo = 'M';
+        } else if (rbtn2.isSelected() == true) {
+            sexo = 'H';
+        }   
+                
+        String datos = "INSERT INTO ADMINISTRADOR.ESTUDIANTE "
+        + "(nombre, edad, sexo,semestre,creditos,idCarrera) values"
+        + "('" + nametxt.getText() + "'," + (int)edadS.getValue() + ",'" + sexo + "'," + (int)SemestreS.getValue() + "," + (int)creditosS.getValue()+ "," + 3 + ")";
+        baseDatos.actualizaDatos(datos);
+        mt.setDatos(baseDatos.consultaDatos("SELECT * FROM ADMINISTRADOR.ESTUDIANTE"), baseDatos);
+        mt.fireTableDataChanged();
+         
+            
+            
+           }});
+    
     terminar.addActionListener(new ActionListener() {
 	public void actionPerformed(ActionEvent arg0) {
 	 if(baseDatos.cerrarSesion()){
